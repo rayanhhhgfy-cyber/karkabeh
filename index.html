@@ -198,7 +198,19 @@ color: var(--primary-color);
 text-decoration: none;
 font-weight: bold;
 }
+
+/* نهاية CSS */
 </style>
+
+<!-- إضافة Supabase JS -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.30.0/dist/supabase.min.js"></script>
+<script>
+// إعداد اتصال Supabase
+const supabaseUrl = 'https://eqbvbpjywjejahcwnizw.supabase.co';
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVxYnZicGp5d2plamFoY3duaXp3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2NzYxNDgsImV4cCI6MjA3NDI1MjE0OH0.0X_VhMYGF6VTfGL_gz5fp1qN5JLZB6gq-tAzd4VYar8';
+const supabase = Supabase.createClient(supabaseUrl, supabaseAnonKey);
+</script>
+
 </head>
 <body>
 
@@ -248,7 +260,7 @@ font-weight: bold;
 </div>
 
 <script>
-// JavaScript
+// JavaScript القديم (دخول المستخدم والأدمن)
 document.addEventListener('DOMContentLoaded', () => {
 const loginForm = document.getElementById('loginForm');
 const emailInput = document.getElementById('email');
@@ -309,7 +321,8 @@ window.location.href = 'signup.html';
 </script>
 </body>
 </html>
-	
+
+
 
 
 
