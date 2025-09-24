@@ -6,7 +6,7 @@
 <title>تسجيل الدخول</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <style>
-/* CSS */
+/* CSS كما هو تماماً */
 @import url('https://fonts.googleapis.com/css2?family=Almarai:wght@400;700&display=swap');
 
 :root {
@@ -197,59 +197,18 @@ font-size: 0.9rem;
 color: var(--primary-color);
 text-decoration: none;
 font-weight: bold;
-/* نهاية CSS */
 }
 </style>
-</head>
-<body>
 
-<div class="login-container">
-<div class="logo-section">
-<img src="ka.png" alt="شعار المتجر" class="logo">
-</div>
-
-<div class="login-form-section">
-<h2>تسجيل الدخول</h2>
-
-<form id="loginForm">
-<div class="input-group">
-<label for="email">البريد الإلكتروني</label>
-<input type="email" id="email" name="email" required>
-</div>
-<div class="input-group">
-<label for="password">كلمة المرور</label>
-<input type="password" id="password" name="password" required>
-</div>
-<div class="options">
-<label>
-<input type="checkbox" id="isAdmin"> تسجيل دخول كمسؤول
-</label>
-<a href="#">نسيت كلمة المرور؟</a>
-</div>
-<button type="submit" class="login-btn">دخول</button>
-</form>
-
-<div class="divider">
-<span>أو</span>
-</div>
-
-<div class="social-login-options">
-<button class="social-btn google-btn">
-<i class="fab fa-google"></i> تسجيل الدخول بـ Google
-</button>
-<button class="social-btn apple-btn">
-<i class="fab fa-apple"></i> تسجيل الدخول بـ Apple
-</button>
-</div>
-
-<p class="signup-link">
-ليس لديك حساب؟ <a href="#" id="signupLink">إنشاء حساب</a>
-</p>
-</div>
-</div>
+<!-- Supabase JS -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.30.0/dist/supabase.min.js"></script>
 
 <script>
-// JavaScript
+// إعداد اتصال Supabase
+const supabaseUrl = 'https://eqbvbpjywjejahcwnizw.supabase.co';
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVxYnZicGp5d2plamFoY3duaXp3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2NzYxNDgsImV4cCI6MjA3NDI1MjE0OH0.0X_VhMYGF6VTfGL_gz5fp1qN5JLZB6gq-tAzd4VYar8';
+const supabase = Supabase.createClient(supabaseUrl, supabaseAnonKey);
+
 document.addEventListener('DOMContentLoaded', () => {
 const loginForm = document.getElementById('loginForm');
 const emailInput = document.getElementById('email');
@@ -257,19 +216,13 @@ const passwordInput = document.getElementById('password');
 const isAdminCheckbox = document.getElementById('isAdmin');
 const signupLink = document.getElementById('signupLink');
 
-// بيانات الأدمن (يمكن تعديلها)
+// بيانات الأدمن
 const adminCredentials = {
 email: 'admin@gmail.com',
 password: 'ad'
 };
 
-// تحميل البريد الإلكتروني المحفوظ من localStorage عند تحميل الصفحة
-const savedEmail = localStorage.getItem('lastLoggedInEmail');
-if (savedEmail) {
-emailInput.value = savedEmail;
-}
-
-loginForm.addEventListener('submit', (event) => {
+loginForm.addEventListener('submit', async (event) => {
 event.preventDefault();
 
 const email = emailInput.value;
@@ -284,21 +237,25 @@ return;
 if (isAdmin) {
 if (email === adminCredentials.email && password === adminCredentials.password) {
 alert('تم تسجيل دخول المسؤول بنجاح!');
-localStorage.setItem('lastLoggedInEmail', email);
-window.location.href = 'store.html';
+window.location.href = 'reel.html';
 } else {
 alert('بيانات المسؤول غير صحيحة. يرجى التحقق من المعلومات.');
 }
 } else {
-const storedUser = JSON.parse(localStorage.getItem('userAccount'));
+  // تحقق من بيانات المستخدم في Supabase
+  const { data: user, error } = await supabase
+    .from('customers')
+    .select('*')
+    .eq('email', email)
+    .eq('password', password)
+    .single();
 
-if (storedUser && storedUser.email === email && storedUser.password === password) {
-alert('تم تسجيل دخول المستخدم بنجاح!');
-localStorage.setItem('lastLoggedInEmail', email);
-window.location.href = 'store.html';
-} else {
-alert('البيانات غير صحيحة أو الحساب غير موجود. الرجاء التحقق من البريد الإلكتروني وكلمة المرور.');
-}
+  if (user) {
+    alert('تم تسجيل دخول المستخدم بنجاح!');
+    window.location.href = 'reel.html';
+  } else {
+    alert('البيانات غير صحيحة أو الحساب غير موجود.');
+  }
 }
 });
 
