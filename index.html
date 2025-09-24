@@ -210,59 +210,59 @@ const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYm
 const supabase = Supabase.createClient(supabaseUrl, supabaseAnonKey);
 
 document.addEventListener('DOMContentLoaded', () => {
-const loginForm = document.getElementById('loginForm');
-const emailInput = document.getElementById('email');
-const passwordInput = document.getElementById('password');
-const isAdminCheckbox = document.getElementById('isAdmin');
-const signupLink = document.getElementById('signupLink');
+  const loginForm = document.getElementById('loginForm');
+  const emailInput = document.getElementById('email');
+  const passwordInput = document.getElementById('password');
+  const isAdminCheckbox = document.getElementById('isAdmin');
+  const signupLink = document.getElementById('signupLink');
 
-// بيانات الأدمن
-const adminCredentials = {
-email: 'admin@gmail.com',
-password: 'ad'
-};
+  // بيانات الأدمن
+  const adminCredentials = {
+    email: 'admin@gmail.com',
+    password: 'ad'
+  };
 
-loginForm.addEventListener('submit', async (event) => {
-event.preventDefault();
+  loginForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
 
-const email = emailInput.value;
-const password = passwordInput.value;
-const isAdmin = isAdminCheckbox.checked;
+    const email = emailInput.value;
+    const password = passwordInput.value;
+    const isAdmin = isAdminCheckbox.checked;
 
-if (email.trim() === '' || password.trim() === '') {
-alert('الرجاء إدخال جميع الحقول.');
-return;
-}
+    if (email.trim() === '' || password.trim() === '') {
+      alert('الرجاء إدخال جميع الحقول.');
+      return;
+    }
 
-if (isAdmin) {
-if (email === adminCredentials.email && password === adminCredentials.password) {
-alert('تم تسجيل دخول المسؤول بنجاح!');
-window.location.href = 'reel.html';
-} else {
-alert('بيانات المسؤول غير صحيحة. يرجى التحقق من المعلومات.');
-}
-} else {
-  // تحقق من بيانات المستخدم في Supabase
-  const { data: user, error } = await supabase
-    .from('customers')
-    .select('*')
-    .eq('email', email)
-    .eq('password', password)
-    .single();
+    if (isAdmin) {
+      if (email === adminCredentials.email && password === adminCredentials.password) {
+        alert('تم تسجيل دخول المسؤول بنجاح!');
+        window.location.href = 'reel.html';
+      } else {
+        alert('بيانات المسؤول غير صحيحة. يرجى التحقق من المعلومات.');
+      }
+    } else {
+      // تحقق من بيانات المستخدم في Supabase
+      const { data: user, error } = await supabase
+        .from('customers')
+        .select('*')
+        .eq('email', email)
+        .eq('password', password)
+        .single();
 
-  if (user) {
-    alert('تم تسجيل دخول المستخدم بنجاح!');
-    window.location.href = 'reel.html';
-  } else {
-    alert('البيانات غير صحيحة أو الحساب غير موجود.');
-  }
-}
-});
+      if (user) {
+        alert('تم تسجيل دخول المستخدم بنجاح!');
+        window.location.href = 'reel.html';
+      } else {
+        alert('البيانات غير صحيحة أو الحساب غير موجود.');
+      }
+    }
+  });
 
-signupLink.addEventListener('click', (event) => {
-event.preventDefault();
-window.location.href = 'signup.html';
-});
+  signupLink.addEventListener('click', (event) => {
+    event.preventDefault();
+    window.location.href = 'signup.html';
+  });
 });
 </script>
 </body>
