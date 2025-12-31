@@ -263,7 +263,6 @@ export default function ProductDetail({ product, reviews }) {
       </div>
     </div>
   );
-}
 
 export async function getServerSideProps({ params }) {
   try {
