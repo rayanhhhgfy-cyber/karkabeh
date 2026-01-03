@@ -78,3 +78,6 @@ All files currently use Base44-specific imports:
 - Original Base44 project: Karkabeh
 - Target: Free Supabase tier
 - Authentication: Google OAuth (rayanaljamal550@gmail.com)
+
+
+<!-- Deployment trigger: 2026-01-03 -->
