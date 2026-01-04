@@ -7,12 +7,23 @@ import Navigation from '../components/Navigation';
 import Toast from '../components/Toast';
 
 export default function Products({ initialProducts, initialCategories }) {
-  const [products] = useState(initialProducts || []);
+  const [products, setProducts] = useState(initialProducts || []);
+  const [allProducts] = useState(initialProducts || []);
   const [loading] = useState(false);
   const [categories] = useState(initialCategories || []);
+  const [selectedCategory, setSelectedCategory] = useState('all');
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   const { addToCart } = useCart();
+
+  const handleCategoryFilter = (categoryId) => {
+    setSelectedCategory(categoryId);
+    if (categoryId === 'all') {
+      setProducts(allProducts);
+    } else {
+      setProducts(allProducts.filter(p => p.category_id === categoryId));
+    }
+  };
 
   const handleAddToCart = (e, product) => {
     e.preventDefault();
@@ -32,11 +43,11 @@ export default function Products({ initialProducts, initialCategories }) {
       />
       
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-12 md:py-16">
+      <div className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-12 md:py-16 animate-fadeIn">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3 md:mb-4">
-              Premium Men's Fashion
+              Premium Fashion
             </h1>
             <p className="text-base sm:text-lg md:text-xl text-blue-100 max-w-2xl mx-auto px-4">
               Discover our curated collection of high-quality clothing and accessories
@@ -46,6 +57,34 @@ export default function Products({ initialProducts, initialCategories }) {
       </div>
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+        {/* Category Filter */}
+        <div className="mb-6 md:mb-8 animate-slideUp">
+          <div className="flex flex-wrap gap-2 sm:gap-3 justify-center">
+            <button
+              onClick={() => handleCategoryFilter('all')}
+              className={`px-4 sm:px-6 py-2 rounded-full font-medium transition-all duration-300 text-sm sm:text-base ${
+                selectedCategory === 'all'
+                  ? 'bg-blue-600 text-white shadow-lg scale-105'
+                  : 'bg-white text-gray-700 hover:bg-gray-100 hover-lift'
+              }`}
+            >
+              All
+            </button>
+            {categories.map((category) => (
+              <button
+                key={category.id}
+                onClick={() => handleCategoryFilter(category.id)}
+                className={`px-4 sm:px-6 py-2 rounded-full font-medium transition-all duration-300 text-sm sm:text-base ${
+                  selectedCategory === category.id
+                    ? 'bg-blue-600 text-white shadow-lg scale-105'
+                    : 'bg-white text-gray-700 hover:bg-gray-100 hover-lift'
+                }`}
+              >
+                {category.name}
+              </button>
+            ))}
+          </div>
+        </div>
         {/* Products Count */}
         {!loading && products.length > 0 && (
           <div className="mb-6 md:mb-8">
@@ -60,9 +99,13 @@ export default function Products({ initialProducts, initialCategories }) {
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
           </div>
         ) : products.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
-            {products.map((product) => (
-              <div key={product.id} className="group bg-white rounded-xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 cursor-pointer transform hover:-translate-y-1">
+          <div className="product-grid">
+            {products.map((product, index) => (
+              <div 
+                key={product.id} 
+                className="group bg-white rounded-xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 cursor-pointer hover-lift animate-scaleUp"
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
                   {product.image_url && (
                     <div className="relative h-56 sm:h-64 lg:h-72 w-full bg-gray-100 overflow-hidden">
                       <img 
