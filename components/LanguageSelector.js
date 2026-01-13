@@ -23,8 +23,7 @@ export default function LanguageSelector() {
         />
       </svg>
       <span className="text-sm font-semibold">
-        {language === 'en' ? 'العربية' : 'English'}
-      </span>
+          {language === 'en' ? 'عربي' : 'English'}      </span>
     </button>
   );
 }
