@@ -147,30 +147,43 @@ a {
    MOBILE RESPONSIVENESS
    ======================================== */
 
-
-/* Product Grid Base Styles */
-.product-grid {
-    display: grid;
-}
 /* Product Grid - Mobile Responsive */
 @media (max-width: 640px) {
   .product-grid {
-        grid-template-columns: repeat(3, 1fr) !important;
-        gap: 0.5rem !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 1rem !important;
   }
 }
 
 @media (min-width: 641px) and (max-width: 768px) {
   .product-grid {
-    grid-template-columns: repeat(5, 1fr) !important;  }
-    gap: 0.5rem !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 1rem !important;
+  }
 }
 
-@media (min-width: 769px) {
-    .product-grid {
-          grid-template-columns: repeat(6, 1fr) !important;
-          gap: 0.75rem !important;
-    }
+/* Tablet - 3 columns */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .product-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 1rem !important;
+  }
+}
+
+/* Desktop - 4 columns */
+@media (min-width: 1025px) and (max-width: 1440px) {
+  .product-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 1rem !important;
+  }
+}
+
+/* Large Desktop - 4 columns */
+@media (min-width: 1441px) {
+  .product-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 1rem !important;
+  }
 }
 
 /* Mobile Order History Fix */
@@ -188,4 +201,6 @@ a {
     width: 60px !important;
     height: 60px !important;
   }
-}
+}git add pages/products/[id].js
+git commit -m "Add simple redirect for product detail page"
+git push origin main
