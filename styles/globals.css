@@ -147,6 +147,11 @@ a {
    MOBILE RESPONSIVENESS
    ======================================== */
 
+
+/* Product Grid Base Styles */
+.product-grid {
+    display: grid;
+}
 /* Product Grid - Mobile Responsive */
 @media (max-width: 640px) {
   .product-grid {
