@@ -103,11 +103,14 @@ export default function Products({ initialProducts, initialCategories }) {
         ) : products.length > 0 ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
             {products.map((product, index) => (
-              <div 
-                key={product.id} 
-                className="group bg-white rounded-xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 cursor-pointer hover-lift animate-scaleUp"
-                style={{ animationDelay: `${index * 0.1}s` }}
+              <Link 
+                key={product.id}
+                href={`/products/${product.id}`}
               >
+                <div 
+                  className="group bg-white rounded-xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 cursor-pointer hover-lift animate-scaleUp"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
                   {product.image_url && (
                     <div className="relative h-56 sm:h-64 lg:h-72 w-full bg-gray-100 overflow-hidden">
                       <img 
@@ -149,6 +152,7 @@ export default function Products({ initialProducts, initialCategories }) {
                       {product.stock === 0 ? t('outOfStock') : t('addToCart')}
                     </button>
                   </div>
+              </Link>
                 </div>
             ))}
           </div>
