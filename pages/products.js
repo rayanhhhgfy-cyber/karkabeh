@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import { useCart } from '../context/CartContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import Link from 'next/link';
 import Image from 'next/image';
 import Navigation from '../components/Navigation';
@@ -15,6 +16,7 @@ export default function Products({ initialProducts, initialCategories }) {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   const { addToCart } = useCart();
+  const { t } = useLanguage();
 
   const handleCategoryFilter = (categoryId) => {
     setSelectedCategory(categoryId);
@@ -47,10 +49,10 @@ export default function Products({ initialProducts, initialCategories }) {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3 md:mb-4">
-              Premium Fashion
+              {t('premiumFashion')}
             </h1>
             <p className="text-base sm:text-lg md:text-xl text-blue-100 max-w-2xl mx-auto px-4">
-              Discover our curated collection of high-quality clothing and accessories
+              {t('heroDescription')}
             </p>
           </div>
         </div>
@@ -68,7 +70,7 @@ export default function Products({ initialProducts, initialCategories }) {
                   : 'bg-white text-gray-700 hover:bg-gray-100 hover-lift'
               }`}
             >
-              All
+              {t('all')}
             </button>
             {categories.map((category) => (
               <button
@@ -89,7 +91,7 @@ export default function Products({ initialProducts, initialCategories }) {
         {!loading && products.length > 0 && (
           <div className="mb-6 md:mb-8">
             <p className="text-sm sm:text-base text-gray-600">
-              Showing <span className="font-semibold text-gray-900">{products.length}</span> products
+              {t('showing')} <span className="font-semibold text-gray-900">{products.length}</span> {t('productsText')}
             </p>
           </div>
         )}
@@ -116,7 +118,7 @@ export default function Products({ initialProducts, initialCategories }) {
                       {product.stock === 0 && (
                         <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
                           <span className="bg-red-500 text-white px-4 py-2 rounded-full font-semibold text-sm">
-                            Out of Stock
+                            {t('outOfStock')}
                           </span>
                         </div>
                       )}
@@ -135,7 +137,7 @@ export default function Products({ initialProducts, initialCategories }) {
                       </p>
                       {product.stock > 0 && product.stock < 10 && (
                         <span className="text-xs text-orange-600 font-medium">
-                          Only {product.stock} left
+                          {t('onlyXLeft').replace('{count}', product.stock)}
                         </span>
                       )}
                     </div>
@@ -144,7 +146,7 @@ export default function Products({ initialProducts, initialCategories }) {
                       disabled={product.stock === 0}
                       className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 py-2.5 sm:py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-indigo-700 transition-all transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow-md hover:shadow-lg text-sm sm:text-base"
                     >
-                      {product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
+                      {product.stock === 0 ? t('outOfStock') : t('addToCart')}
                     </button>
                   </div>
                 </div>

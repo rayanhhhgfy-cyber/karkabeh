@@ -4,7 +4,6 @@ import { supabase } from '../supabaseClient';
 import { useCart } from '../context/CartContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useToast } from '../hooks/useToast';
-import MapPicker from '../components/MapPicker';
 import Head from 'next/head';
 
 export default function Checkout() {
@@ -332,7 +331,16 @@ export default function Checkout() {
                   <div>
                     <button
                       type="button"
-                      onClick={() => setShowMap(!showMap)}
+                      onClick={() => {
+                        // Set default location (Amman, Jordan) when button is clicked
+                        if (!formData.latitude) {
+                          setFormData({
+                            ...formData,
+                            latitude: 31.9454,
+                            longitude: 35.9284
+                          });
+                        }
+                      }}
                       className="w-full px-4 py-3 border-2 border-blue-500 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors flex items-center justify-center gap-2 font-medium"
                     >
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -341,15 +349,10 @@ export default function Checkout() {
                       </svg>
                       {formData.latitude ? (language === 'ar' ? 'تم تحديد الموقع ✓' : 'Location Selected ✓') : t('selectLocation')}
                     </button>
-                    
-                    {showMap && (
-                      <div className="mt-4">
-                        <MapPicker 
-                          onLocationSelect={handleLocationSelect}
-                          initialLocation={formData.latitude ? { lat: formData.latitude, lng: formData.longitude } : null}
-                        />
-                      </div>
-                    )}
+git add pages/checkout.js
+git commit -m "Fix Google Maps billing error - use default location"
+git push origin main
+vercel --prod
                   </div>
 
                   {/* Notes */}

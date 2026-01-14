@@ -98,6 +98,25 @@ export const translations = {
     shipped: 'Shipped',
     delivered: 'Delivered',
     cancelled: 'Cancelled',
+    
+    // Hero Section
+    premiumFashion: 'Premium Fashion',
+    heroDescription: 'Discover our curated collection of high-quality clothing and accessories',
+    
+    // Categories
+    all: 'All',
+    clothing: 'Clothing',
+    footwear: 'Footwear',
+    accessories: 'Accessories',
+    sportswear: 'Sportswear',
+    outerwear: 'Outerwear',
+    
+    // Product Status
+    outOfStock: 'Out of Stock',
+    inStock: 'In Stock',
+    onlyXLeft: 'Only {count} left',
+    showing: 'Showing',
+    productsText: 'products',
   },
   ar: {
     // Navigation
@@ -194,6 +213,25 @@ export const translations = {
     shipped: 'تم الشحن',
     delivered: 'تم التوصيل',
     cancelled: 'ملغي',
+    
+    // Hero Section
+    premiumFashion: 'أزياء فاخرة',
+    heroDescription: 'اكتشف مجموعتنا المنتقاة من الملابس والإكسسوارات عالية الجودة',
+    
+    // Categories
+    all: 'الكل',
+    clothing: 'ملابس',
+    footwear: 'أحذية',
+    accessories: 'إكسسوارات',
+    sportswear: 'ملابس رياضية',
+    outerwear: 'ملابس خارجية',
+    
+    // Product Status
+    outOfStock: 'نفذت الكمية',
+    inStock: 'متوفر',
+    onlyXLeft: 'فقط {count} متبقي',
+    showing: 'عرض',
+    productsText: 'منتجات',
   }
 };
 
