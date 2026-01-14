@@ -1,0 +1,28 @@
+[1mdiff --git a/pages/products.js b/pages/products.js[m
+[1mindex ef9e483..701a82d 100644[m
+[1m--- a/pages/products.js[m
+[1m+++ b/pages/products.js[m
+[36m@@ -103,11 +103,11 @@[m [mexport default function Products({ initialProducts, initialCategories }) {[m
+         ) : products.length > 0 ? ([m
+           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">[m
+             {products.map((product, index) => ([m
+[31m-              <div [m
+[31m-                key={product.id} [m
+[31m-                className="group bg-white rounded-xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 cursor-pointer hover-lift animate-scaleUp"[m
+[31m-                style={{ animationDelay: `${index * 0.1}s` }}[m
+[32m+[m[32m              <Link[m[41m [m
+[32m+[m[32m                key={product.id}[m
+[32m+[m[32m                href={`/products/${product.id}`}[m
+               >[m
+[32m+[m[32m                <div[m[41m [m
+                   {product.image_url && ([m
+                     <div className="relative h-56 sm:h-64 lg:h-72 w-full bg-gray-100 overflow-hidden">[m
+                       <img [m
+[36m@@ -150,6 +150,7 @@[m [mexport default function Products({ initialProducts, initialCategories }) {[m
+                     </button>[m
+                   </div>[m
+                 </div>[m
+[32m+[m[32m                              </Link>[m
+             ))}[m
+           </div>[m
+         ) : ([m

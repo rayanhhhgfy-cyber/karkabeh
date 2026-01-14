@@ -16,6 +16,53 @@ export default function Login() {
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
 
+  // Function to convert technical errors to user-friendly messages
+  function getFriendlyErrorMessage(error) {
+    const errorMessage = error.message || error.toString();
+    
+    // Common Supabase auth errors
+    if (errorMessage.includes('Invalid login credentials')) {
+      return language === 'ar' 
+        ? 'البريد الإلكتروني أو كلمة المرور غير صحيحة' 
+        : 'Invalid email or password. Please try again.';
+    }
+    if (errorMessage.includes('Email not confirmed')) {
+      return language === 'ar'
+        ? 'يرجى تأكيد بريدك الإلكتروني أولاً'
+        : 'Please verify your email address first.';
+    }
+    if (errorMessage.includes('User already registered')) {
+      return language === 'ar'
+        ? 'هذا البريد الإلكتروني مسجل بالفعل'
+        : 'This email is already registered. Please sign in instead.';
+    }
+    if (errorMessage.includes('row-level security policy')) {
+      return language === 'ar'
+        ? 'عذراً، حدث خطأ في إنشاء الحساب. يرجى المحاولة مرة أخرى أو التواصل مع الدعم'
+        : 'Sorry, there was an error creating your account. Please try again or contact support.';
+    }
+    if (errorMessage.includes('invalid') && errorMessage.includes('email')) {
+      return language === 'ar'
+        ? 'يرجى استخدام عنوان بريد إلكتروني صالح'
+        : 'Please use a valid email address (e.g., yourname@gmail.com).';
+    }
+    if (errorMessage.includes('Password should be at least')) {
+      return language === 'ar'
+        ? 'يجب أن تكون كلمة المرور 6 أحرف على الأقل'
+        : 'Password must be at least 6 characters long.';
+    }
+    if (errorMessage.includes('Network request failed') || errorMessage.includes('fetch')) {
+      return language === 'ar'
+        ? 'خطأ في الاتصال. يرجى التحقق من اتصالك بالإنترنت'
+        : 'Connection error. Please check your internet connection.';
+    }
+    
+    // Default friendly message
+    return language === 'ar'
+      ? 'حدث خطأ. يرجى المحاولة مرة أخرى'
+      : 'An error occurred. Please try again.';
+  }
+
   async function handleGoogleLogin() {
     try {
       const { data, error } = await supabase.auth.signInWithOAuth({
@@ -26,7 +73,7 @@ export default function Login() {
       });
       if (error) throw error;
     } catch (error) {
-      setError(error.message);
+      setError(getFriendlyErrorMessage(error));
     }
   }
 
@@ -86,7 +133,7 @@ export default function Login() {
         setIsLogin(true);
       }
     } catch (error) {
-      setError(error.message);
+      setError(getFriendlyErrorMessage(error));
     } finally {
       setLoading(false);
     }

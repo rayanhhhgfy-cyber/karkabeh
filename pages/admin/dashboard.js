@@ -2,6 +2,17 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { supabase } from '../../supabaseClient';
 import Link from 'next/link';
+import { 
+  Package, 
+  ShoppingBag, 
+  Users,
+  Shield,
+  Search,
+  Star,
+  Code
+} from 'lucide-react';
+import { Button } from '../../components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 
 export default function AdminDashboard() {
   const router = useRouter();
@@ -93,6 +104,28 @@ export default function AdminDashboard() {
     router.push('/login');
   }
 
+  async function handleResetRevenue() {
+    if (!confirm('هل أنت متأكد من إعادة تعيين إجمالي الإيرادات إلى الصفر؟ هذا الإجراء لا يمكن التراجع عنه.')) {
+      return;
+    }
+
+    try {
+      // Update all orders to set total_amount to 0
+      const { error } = await supabase
+        .from('orders')
+        .update({ total_amount: 0 })
+        .neq('id', 0); // Update all records
+
+      if (error) throw error;
+
+      alert('تم إعادة تعيين إجمالي الإيرادات بنجاح!');
+      await loadStats(); // Reload stats
+    } catch (error) {
+      console.error('Error resetting revenue:', error);
+      alert('حدث خطأ أثناء إعادة تعيين الإيرادات');
+    }
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -110,6 +143,12 @@ export default function AdminDashboard() {
             <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
             <div className="flex items-center space-x-4">
               <span className="text-gray-600">{user?.email}</span>
+              <button
+                onClick={handleResetRevenue}
+                className="bg-orange-600 text-white px-4 py-2 rounded hover:bg-orange-700"
+              >
+                إعادة تعيين الإيرادات
+              </button>
               <button
                 onClick={handleLogout}
                 className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
@@ -143,98 +182,101 @@ export default function AdminDashboard() {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex items-center">
-              <div className="flex-1">
-                <p className="text-gray-500 text-sm">Total Products</p>
-                <p className="text-3xl font-bold text-gray-900">{stats.totalProducts}</p>
-              </div>
-              <div className="bg-blue-100 rounded-full p-3">
-                <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                </svg>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex items-center">
-              <div className="flex-1">
-                <p className="text-gray-500 text-sm">Total Orders</p>
-                <p className="text-3xl font-bold text-gray-900">{stats.totalOrders}</p>
-              </div>
-              <div className="bg-green-100 rounded-full p-3">
-                <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                </svg>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex items-center">
-              <div className="flex-1">
-                <p className="text-gray-500 text-sm">Total Users</p>
-                <p className="text-3xl font-bold text-gray-900">{stats.totalUsers}</p>
-              </div>
-              <div className="bg-purple-100 rounded-full p-3">
-                <svg className="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                </svg>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex items-center">
-              <div className="flex-1">
-                <p className="text-gray-500 text-sm">Total Revenue</p>
-                <p className="text-3xl font-bold text-gray-900">${stats.totalRevenue.toFixed(2)}</p>
-              </div>
-              <div className="bg-yellow-100 rounded-full p-3">
-                <svg className="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-            </div>
-          </div>
+        <div className="flex items-center gap-3 mb-8">
+          <Shield className="w-8 h-8 text-purple-600" />
+          <h1 className="text-3xl font-bold text-gray-900">لوحة تحكم الإدارة</h1>
         </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fadeIn">
+          <Card className="hover:shadow-lg hover:scale-105 transition-all duration-300 ease-in-out">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-3">
+                <Package className="w-6 h-6 text-blue-500" />
+                <span>إدارة المنتجات</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-gray-600 mb-4">أضف، عدّل، أو احذف المنتجات في متجرك.</p>
+              <Link href="/admin/products">
+                <Button variant="outline" className="w-full">الذهاب لإدارة المنتجات</Button>
+              </Link>
+            </CardContent>
+          </Card>
 
-        {/* Quick Actions */}
-        <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">Quick Actions</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Link
-              href="/admin/products"
-              className="flex items-center justify-center bg-blue-600 text-white px-6 py-4 rounded-lg hover:bg-blue-700 transition"
-            >
-              <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-              </svg>
-              Add New Product
-            </Link>
-            <Link
-              href="/admin/orders"
-              className="flex items-center justify-center bg-green-600 text-white px-6 py-4 rounded-lg hover:bg-green-700 transition"
-            >
-              <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-              </svg>
-              View Orders
-            </Link>
-            <Link
-              href="/products"
-              className="flex items-center justify-center bg-purple-600 text-white px-6 py-4 rounded-lg hover:bg-purple-700 transition"
-            >
-              <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-              </svg>
-              View Store
-            </Link>
-          </div>
+          <Card className="hover:shadow-lg hover:scale-105 transition-all duration-300 ease-in-out">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-3">
+                <ShoppingBag className="w-6 h-6 text-green-500" />
+                <span>إدارة الطلبات</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-gray-600 mb-4">عرض وتحديث حالات الطلبات الواردة.</p>
+              <Link href="/admin/orders">
+                <Button variant="outline" className="w-full">الذهاب لإدارة الطلبات</Button>
+              </Link>
+            </CardContent>
+          </Card>
+
+          <Card className="hover:shadow-lg hover:scale-105 transition-all duration-300 ease-in-out">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-3">
+                <Users className="w-6 h-6 text-purple-500" />
+                <span>إدارة المستخدمين</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-gray-600 mb-4">عرض قائمة المستخدمين المسجلين في المتجر.</p>
+              <Link href="/admin/users">
+                <Button variant="outline" className="w-full">الذهاب لإدارة المستخدمين</Button>
+              </Link>
+            </CardContent>
+          </Card>
+
+          <Card className="hover:shadow-lg hover:scale-105 transition-all duration-300 ease-in-out">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-3">
+                <Search className="w-6 h-6 text-orange-500" />
+                <span>طلبات المنتجات</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-gray-600 mb-4">عرض طلبات العملاء للمنتجات غير المتوفرة.</p>
+              <Link href="/admin/product-requests">
+                <Button variant="outline" className="w-full">عرض الطلبات</Button>
+              </Link>
+            </CardContent>
+          </Card>
+
+          <Card className="hover:shadow-lg hover:scale-105 transition-all duration-300 ease-in-out">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-3">
+                <Star className="w-6 h-6 text-yellow-500" />
+                <span>إدارة التقييمات</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-gray-600 mb-4">عرض وحذف تقييمات العملاء على المنتجات.</p>
+              <Link href="/admin/reviews">
+                <Button variant="outline" className="w-full">عرض التقييمات</Button>
+              </Link>
+            </CardContent>
+          </Card>
+
+          <Card className="hover:shadow-lg hover:scale-105 transition-all duration-300 ease-in-out border-2 border-indigo-200">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-3">
+                <Code className="w-6 h-6 text-indigo-500" />
+                <span>عرض الأكواد</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-gray-600 mb-4">عرض أكواد جميع الصفحات والمكونات والكيانات.</p>
+              <Link href="/admin/code-viewer">
+                <Button variant="outline" className="w-full">عرض الأكواد</Button>
+              </Link>
+            </CardContent>
+          </Card>
         </div>
       </main>
     </div>

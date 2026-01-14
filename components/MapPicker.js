@@ -27,7 +27,7 @@ export default function MapPicker({ onLocationSelect, initialLocation }) {
   }, [initialLocation]);
 
   useEffect(() => {
-    // Load Google Maps script
+    // Load Google Maps script only once
     if (!window.google) {
       const script = document.createElement('script');
       script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || 'AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8'}&libraries=places`;
@@ -35,10 +35,21 @@ export default function MapPicker({ onLocationSelect, initialLocation }) {
       script.defer = true;
       script.onload = initMap;
       document.head.appendChild(script);
-    } else {
+    } else if (!map) {
+      // Only initialize map if it hasn't been initialized yet
       initMap();
     }
-  }, [currentLocation]);
+  }, []);
+
+  // Update map center when currentLocation changes
+  useEffect(() => {
+    if (map && currentLocation) {
+      map.setCenter(currentLocation);
+      if (markerRef.current) {
+        markerRef.current.setPosition(currentLocation);
+      }
+    }
+  }, [currentLocation, map]);
 
   function initMap() {
     if (!mapRef.current || !window.google) return;
