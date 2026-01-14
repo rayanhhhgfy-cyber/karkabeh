@@ -173,6 +173,9 @@ export default function AdminDashboard() {
             <Link href="/admin/orders" className="text-gray-600 hover:text-blue-600 pb-2">
               Orders
             </Link>
+            <Link href="/admin/reviews" className="text-gray-600 hover:text-blue-600 pb-2">
+              Reviews
+            </Link>
             <Link href="/products" className="text-gray-600 hover:text-blue-600 pb-2">
               View Store
             </Link>

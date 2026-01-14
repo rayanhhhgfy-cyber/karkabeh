@@ -266,6 +266,9 @@ export default function AdminProducts() {
             <Link href="/admin/orders" className="text-sm sm:text-base text-gray-600 hover:text-blue-600 pb-2 whitespace-nowrap transition-colors">
               Orders
             </Link>
+            <Link href="/admin/reviews" className="text-sm sm:text-base text-gray-600 hover:text-blue-600 pb-2 whitespace-nowrap transition-colors">
+              Reviews
+            </Link>
             <Link href="/products" className="text-sm sm:text-base text-gray-600 hover:text-blue-600 pb-2 whitespace-nowrap transition-colors">
               View Store
             </Link>
