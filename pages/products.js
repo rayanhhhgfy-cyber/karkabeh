@@ -152,8 +152,8 @@ export default function Products({ initialProducts, initialCategories }) {
                       {product.stock === 0 ? t('outOfStock') : t('addToCart')}
                     </button>
                   </div>
-              </Link>
                 </div>
+              </Link>
             ))}
           </div>
         ) : (
