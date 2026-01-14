@@ -101,7 +101,7 @@ export default function Products({ initialProducts, initialCategories }) {
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
           </div>
         ) : products.length > 0 ? (
-          <div className="product-grid">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
             {products.map((product, index) => (
               <div 
                 key={product.id} 
