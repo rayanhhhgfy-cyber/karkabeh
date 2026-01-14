@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
-import { supabase } from '../lib/supabaseClient';
+import { supabase } from '../supabaseClient';
 import Layout from '../components/Layout';
 
 export default function RequestProduct({ initialLanguage }) {
