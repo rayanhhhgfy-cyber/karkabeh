@@ -349,10 +349,6 @@ export default function Checkout() {
                       </svg>
                       {formData.latitude ? (language === 'ar' ? 'تم تحديد الموقع ✓' : 'Location Selected ✓') : t('selectLocation')}
                     </button>
-git add pages/checkout.js
-git commit -m "Fix Google Maps billing error - use default location"
-git push origin main
-vercel --prod
                   </div>
 
                   {/* Notes */}
