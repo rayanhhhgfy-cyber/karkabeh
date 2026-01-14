@@ -187,8 +187,6 @@ a {
 
 /* Mobile Order History Fix */
 @media (max-width: 640px) {
-  .order-card {
-  }
   
   .order-items {
     max-height: none !important;
