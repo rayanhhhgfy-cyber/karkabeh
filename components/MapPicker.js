@@ -1,14 +1,32 @@
 import { useEffect, useRef, useState } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
+import dynamic from 'next/dynamic';
+
+// Dynamically import Leaflet to avoid SSR issues
+const MapContainer = dynamic(
+  () => import('react-leaflet').then((mod) => mod.MapContainer),
+  { ssr: false }
+);
+const TileLayer = dynamic(
+  () => import('react-leaflet').then((mod) => mod.TileLayer),
+  { ssr: false }
+);
+const Marker = dynamic(
+  () => import('react-leaflet').then((mod) => mod.Marker),
+  { ssr: false }
+);
+const useMapEvents = dynamic(
+  () => import('react-leaflet').then((mod) => mod.useMapEvents),
+  { ssr: false }
+);
 
 export default function MapPicker({ onLocationSelect, initialLocation }) {
-  const mapRef = useRef(null);
-  const markerRef = useRef(null);
-  const [map, setMap] = useState(null);
   const [currentLocation, setCurrentLocation] = useState(initialLocation || { lat: 31.9539, lng: 35.9106 }); // Amman, Jordan
+  const [isClient, setIsClient] = useState(false);
   const { t, language } = useLanguage();
 
   useEffect(() => {
+    setIsClient(true);
     // Get user's current location
     if (navigator.geolocation && !initialLocation) {
       navigator.geolocation.getCurrentPosition(
@@ -18,85 +36,18 @@ export default function MapPicker({ onLocationSelect, initialLocation }) {
             lng: position.coords.longitude
           };
           setCurrentLocation(location);
+          onLocationSelect(location);
         },
         (error) => {
           console.error('Error getting location:', error);
         }
       );
-    }
-  }, [initialLocation]);
-
-  useEffect(() => {
-    // Load Google Maps script only once
-    if (!window.google) {
-      const script = document.createElement('script');
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || 'AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8'}&libraries=places`;
-      script.async = true;
-      script.defer = true;
-      script.onload = initMap;
-      document.head.appendChild(script);
-    } else if (!map) {
-      // Only initialize map if it hasn't been initialized yet
-      initMap();
+    } else if (initialLocation) {
+      onLocationSelect(initialLocation);
+    } else {
+      onLocationSelect(currentLocation);
     }
   }, []);
-
-  // Update map center when currentLocation changes
-  useEffect(() => {
-    if (map && currentLocation) {
-      map.setCenter(currentLocation);
-      if (markerRef.current) {
-        markerRef.current.setPosition(currentLocation);
-      }
-    }
-  }, [currentLocation, map]);
-
-  function initMap() {
-    if (!mapRef.current || !window.google) return;
-
-    const mapInstance = new window.google.maps.Map(mapRef.current, {
-      center: currentLocation,
-      zoom: 15,
-      mapTypeControl: true,
-      streetViewControl: true,
-      fullscreenControl: true,
-    });
-
-    const marker = new window.google.maps.Marker({
-      position: currentLocation,
-      map: mapInstance,
-      draggable: true,
-      animation: window.google.maps.Animation.DROP,
-    });
-
-    markerRef.current = marker;
-    setMap(mapInstance);
-
-    // Update location when marker is dragged
-    marker.addListener('dragend', () => {
-      const position = marker.getPosition();
-      const location = {
-        lat: position.lat(),
-        lng: position.lng()
-      };
-      setCurrentLocation(location);
-      onLocationSelect(location);
-    });
-
-    // Update location when map is clicked
-    mapInstance.addListener('click', (e) => {
-      const location = {
-        lat: e.latLng.lat(),
-        lng: e.latLng.lng()
-      };
-      marker.setPosition(location);
-      setCurrentLocation(location);
-      onLocationSelect(location);
-    });
-
-    // Initial location callback
-    onLocationSelect(currentLocation);
-  }
 
   function centerOnCurrentLocation() {
     if (navigator.geolocation) {
@@ -107,12 +58,6 @@ export default function MapPicker({ onLocationSelect, initialLocation }) {
             lng: position.coords.longitude
           };
           setCurrentLocation(location);
-          if (map) {
-            map.setCenter(location);
-            if (markerRef.current) {
-              markerRef.current.setPosition(location);
-            }
-          }
           onLocationSelect(location);
         },
         (error) => {
@@ -123,8 +68,68 @@ export default function MapPicker({ onLocationSelect, initialLocation }) {
     }
   }
 
+  function MapEvents() {
+    useMapEvents({
+      click(e) {
+        const location = {
+          lat: e.latlng.lat,
+          lng: e.latlng.lng
+        };
+        setCurrentLocation(location);
+        onLocationSelect(location);
+      },
+    });
+    return null;
+  }
+
+  function DraggableMarker() {
+    const markerRef = useRef(null);
+    
+    const eventHandlers = {
+      dragend() {
+        const marker = markerRef.current;
+        if (marker != null) {
+          const position = marker.getLatLng();
+          const location = {
+            lat: position.lat,
+            lng: position.lng
+          };
+          setCurrentLocation(location);
+          onLocationSelect(location);
+        }
+      },
+    };
+
+    return (
+      <Marker
+        draggable={true}
+        eventHandlers={eventHandlers}
+        position={[currentLocation.lat, currentLocation.lng]}
+        ref={markerRef}
+      />
+    );
+  }
+
+  if (!isClient) {
+    return (
+      <div className="space-y-4">
+        <div className="w-full h-96 rounded-lg border-2 border-gray-300 shadow-sm flex items-center justify-center bg-gray-50">
+          <p className="text-gray-500">Loading map...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-4">
+      <style jsx global>{`
+        @import url('https://unpkg.com/leaflet@1.9.4/dist/leaflet.css');
+        .leaflet-container {
+          height: 400px;
+          border-radius: 0.5rem;
+          border: 2px solid #d1d5db;
+        }
+      `}</style>
       <div className="flex items-center justify-between">
         <label className="block text-sm font-medium text-gray-700">
           {t('selectLocation')}
@@ -141,11 +146,19 @@ export default function MapPicker({ onLocationSelect, initialLocation }) {
           {language === 'ar' ? 'موقعي الحالي' : 'My Location'}
         </button>
       </div>
-      <div 
-        ref={mapRef} 
-        className="w-full h-96 rounded-lg border-2 border-gray-300 shadow-sm"
-        style={{ minHeight: '400px' }}
-      />
+      <MapContainer
+        center={[currentLocation.lat, currentLocation.lng]}
+        zoom={15}
+        style={{ height: '400px', width: '100%' }}
+        key={`${currentLocation.lat}-${currentLocation.lng}`}
+      >
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        <DraggableMarker />
+        <MapEvents />
+      </MapContainer>
       <p className="text-sm text-gray-600">
         {language === 'ar' 
           ? 'اسحب العلامة أو انقر على الخريطة لتحديد موقع التوصيل'
