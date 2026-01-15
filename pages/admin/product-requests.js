@@ -3,17 +3,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { supabase } from '../../supabaseClient';
 import Link from 'next/link';
-import {
-  Package,
-  ShoppingBag,
-  Users,
-  Shield,
-  Search,
-  Star,
-  Code
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Package } from 'lucide-react';
 
 export default function ProductRequestsPage() {
   const router = useRouter();
@@ -86,25 +76,27 @@ export default function ProductRequestsPage() {
       <div className="max-w-7xl mx-auto">
         <div className="mb-6">
           <Link href="/admin/dashboard">
-            <Button variant="outline">العودة للوحة التحكم</Button>
+            <a className="inline-block px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors">
+              العودة للوحة التحكم
+            </a>
           </Link>
         </div>
 
-        <Card>
-          <CardHeader>
+        <div className="bg-white rounded-lg shadow-md">
+          <div className="p-6 border-b">
             <div className="flex items-center gap-2">
               <Package className="w-6 h-6" />
               <h1 className="text-2xl font-bold">طلبات المنتجات</h1>
             </div>
             <p className="text-gray-600 mt-2">عدد الطلبات: {requests.length}</p>
-          </CardHeader>
-          <CardContent>
+          </div>
+          <div className="p-6">
             <div className="space-y-4">
               {requests.length === 0 ? (
                 <p className="text-center text-gray-500 py-8">لا توجد طلبات حاليا</p>
               ) : (
                 requests.map((request) => (
-                  <Card key={request.id} className="p-4">
+                  <div key={request.id} className="bg-white border rounded-lg p-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
                         <p className="text-sm text-gray-600">اسم المنتج</p>
@@ -136,12 +128,12 @@ export default function ProductRequestsPage() {
                         <p className="text-sm">{new Date(request.created_at).toLocaleDateString('ar-EG')}</p>
                       </div>
                     </div>
-                  </Card>
+                  </div>
                 ))
               )}
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
     </div>
   );

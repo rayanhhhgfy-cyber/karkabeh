@@ -3,17 +3,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { supabase } from '../../supabaseClient';
 import Link from 'next/link';
-import {
-  Package,
-  ShoppingBag,
-  Users,
-  Shield,
-  Search,
-  Star,
-  Code
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Users } from 'lucide-react';
 
 export default function UsersPage() {
   const router = useRouter();
@@ -86,19 +76,21 @@ export default function UsersPage() {
       <div className="max-w-7xl mx-auto">
         <div className="mb-6">
           <Link href="/admin/dashboard">
-            <Button variant="outline">العودة للوحة التحكم</Button>
+            <a className="inline-block px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors">
+              العودة للوحة التحكم
+            </a>
           </Link>
         </div>
 
-        <Card>
-          <CardHeader>
+        <div className="bg-white rounded-lg shadow-md">
+          <div className="p-6 border-b">
             <div className="flex items-center gap-2">
               <Users className="w-6 h-6" />
               <h1 className="text-2xl font-bold">إدارة المستخدمين</h1>
             </div>
             <p className="text-gray-600 mt-2">عدد المستخدمين: {users.length}</p>
-          </CardHeader>
-          <CardContent>
+          </div>
+          <div className="p-6">
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
@@ -133,8 +125,8 @@ export default function UsersPage() {
                 </tbody>
               </table>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
     </div>
   );
