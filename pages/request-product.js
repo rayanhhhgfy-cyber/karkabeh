@@ -213,7 +213,8 @@ export default function RequestProduct({ initialLanguage }) {
                   {t.imageUrl}
                 </label>
                 <input
-                  type="url"
+                  type="file
+                  "
                   id="image_url"
                   name="image_url"
                   value={formData.image_url}
