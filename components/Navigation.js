@@ -44,6 +44,13 @@ export default function Navigation() {
             </Link>
             
             <Link 
+              href="/request-product" 
+              className={`text-base font-medium hover:text-blue-600 transition-colors ${router.pathname === '/request-product' ? 'text-blue-600 font-semibold' : 'text-gray-700'}`}
+            >
+              Request Product
+            </Link>
+            
+            <Link 
               href="/profile" 
               className={`text-base font-medium hover:text-blue-600 transition-colors ${router.pathname === '/profile' ? 'text-blue-600 font-semibold' : 'text-gray-700'}`}
             >
@@ -93,6 +100,14 @@ export default function Navigation() {
                     {cartItemCount}
                   </span>
                 )}
+              </Link>
+              
+              <Link 
+                href="/request-product" 
+                onClick={() => setMobileMenuOpen(false)}
+                className={`px-4 py-2 rounded-lg font-medium transition-colors ${router.pathname === '/request-product' ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-50'}`}
+              >
+                Request Product
               </Link>
               
               <Link 
