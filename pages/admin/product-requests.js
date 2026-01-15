@@ -24,15 +24,18 @@ export default function ProductRequestsPage() {
         return;
       }
 
-      const { data: profile } = await supabase
-        .from('profiles')
+      const { data: profile, error: profileError } = await supabase
+        .from('users')
         .select('role')
         .eq('id', user.id)
         .single();
 
-      if (profile?.role !== 'admin') {
-        router.push('/');
-        return;
+      if (profileError || !profile || profile.role !== 'admin') {
+        // Fallback: Check if email is admin email
+        if (user.email !== 'admin2211@gmail.com' && user.email !== 'admin@gmail.com') {
+          router.push('/');
+          return;
+        }
       }
 
       setIsAdmin(true);
@@ -47,7 +50,7 @@ export default function ProductRequestsPage() {
     try {
       const { data, error } = await supabase
         .from('product_requests')
-        .select('*, profiles(first_name, last_name, email)')
+        .select('*, users(first_name, last_name, email)')
         .order('created_at', { ascending: false });
 
       if (error) throw error;

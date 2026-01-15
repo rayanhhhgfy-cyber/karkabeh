@@ -24,15 +24,18 @@ export default function UsersPage() {
         return;
       }
 
-      const { data: profile } = await supabase
-        .from('profiles')
+      const { data: profile, error: profileError } = await supabase
+        .from('users')
         .select('role')
         .eq('id', user.id)
         .single();
 
-      if (profile?.role !== 'admin') {
-        router.push('/');
-        return;
+      if (profileError || !profile || profile.role !== 'admin') {
+        // Fallback: Check if email is admin email
+        if (user.email !== 'admin2211@gmail.com' && user.email !== 'admin@gmail.com') {
+          router.push('/');
+          return;
+        }
       }
 
       setIsAdmin(true);
@@ -46,7 +49,7 @@ export default function UsersPage() {
   const fetchUsers = async () => {
     try {
       const { data, error } = await supabase
-        .from('profiles')
+        .from('users')
         .select('*')
         .order('created_at', { ascending: false });
 
