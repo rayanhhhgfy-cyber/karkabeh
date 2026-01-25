@@ -105,7 +105,7 @@ export default function AdminDashboard() {
   }
 
   async function handleResetRevenue() {
-    if (!confirm('هل أنت متأكد من إعادة تعيين إجمالي الإيرادات إلى الصفر؟ هذا الإجراء لا يمكن التراجع عنه.')) {
+    if (!confirm('Are you sure you want to reset total revenue to zero? This action cannot be undone.')) {
       return;
     }
 
@@ -118,11 +118,11 @@ export default function AdminDashboard() {
 
       if (error) throw error;
 
-      alert('تم إعادة تعيين إجمالي الإيرادات بنجاح!');
+      alert('Total revenue has been reset successfully!');
       await loadStats(); // Reload stats
     } catch (error) {
       console.error('Error resetting revenue:', error);
-      alert('حدث خطأ أثناء إعادة تعيين الإيرادات');
+      alert('An error occurred while resetting revenue');
     }
   }
 
@@ -147,7 +147,7 @@ export default function AdminDashboard() {
                 onClick={handleResetRevenue}
                 className="bg-orange-600 text-white px-4 py-2 rounded hover:bg-orange-700"
               >
-                إعادة تعيين الإيرادات
+                Reset Revenue
               </button>
               <button
                 onClick={handleLogout}
@@ -187,7 +187,7 @@ export default function AdminDashboard() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex items-center gap-3 mb-8">
           <Shield className="w-8 h-8 text-purple-600" />
-          <h1 className="text-3xl font-bold text-gray-900">لوحة تحكم الإدارة</h1>
+          <h1 className="text-3xl font-bold text-gray-900">Admin Control Panel</h1>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fadeIn">
@@ -195,13 +195,13 @@ export default function AdminDashboard() {
             <CardHeader>
               <CardTitle className="flex items-center gap-3">
                 <Package className="w-6 h-6 text-blue-500" />
-                <span>إدارة المنتجات</span>
+                <span>Product Management</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-600 mb-4">أضف، عدّل، أو احذف المنتجات في متجرك.</p>
+              <p className="text-gray-600 mb-4">Add, edit, or delete products in your store.</p>
               <Link href="/admin/products">
-                <Button variant="outline" className="w-full">الذهاب لإدارة المنتجات</Button>
+                <Button variant="outline" className="w-full">Go to Product Management</Button>
               </Link>
             </CardContent>
           </Card>
@@ -210,13 +210,13 @@ export default function AdminDashboard() {
             <CardHeader>
               <CardTitle className="flex items-center gap-3">
                 <ShoppingBag className="w-6 h-6 text-green-500" />
-                <span>إدارة الطلبات</span>
+                <span>Order Management</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-600 mb-4">عرض وتحديث حالات الطلبات الواردة.</p>
+              <p className="text-gray-600 mb-4">View and update incoming order statuses.</p>
               <Link href="/admin/orders">
-                <Button variant="outline" className="w-full">الذهاب لإدارة الطلبات</Button>
+                <Button variant="outline" className="w-full">Go to Order Management</Button>
               </Link>
             </CardContent>
           </Card>
@@ -225,13 +225,13 @@ export default function AdminDashboard() {
             <CardHeader>
               <CardTitle className="flex items-center gap-3">
                 <Users className="w-6 h-6 text-purple-500" />
-                <span>إدارة المستخدمين</span>
+                <span>User Management</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-600 mb-4">عرض قائمة المستخدمين المسجلين في المتجر.</p>
+              <p className="text-gray-600 mb-4">View list of registered users in the store.</p>
               <Link href="/admin/users">
-                <Button variant="outline" className="w-full">الذهاب لإدارة المستخدمين</Button>
+                <Button variant="outline" className="w-full">Go to User Management</Button>
               </Link>
             </CardContent>
           </Card>
@@ -240,13 +240,13 @@ export default function AdminDashboard() {
             <CardHeader>
               <CardTitle className="flex items-center gap-3">
                 <Search className="w-6 h-6 text-orange-500" />
-                <span>طلبات المنتجات</span>
+                <span>Product Requests</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-600 mb-4">عرض طلبات العملاء للمنتجات غير المتوفرة.</p>
+              <p className="text-gray-600 mb-4">View customer requests for unavailable products.</p>
               <Link href="/admin/product-requests">
-                <Button variant="outline" className="w-full">عرض الطلبات</Button>
+                <Button variant="outline" className="w-full">View Requests</Button>
               </Link>
             </CardContent>
           </Card>
@@ -255,13 +255,13 @@ export default function AdminDashboard() {
             <CardHeader>
               <CardTitle className="flex items-center gap-3">
                 <Star className="w-6 h-6 text-yellow-500" />
-                <span>إدارة التقييمات</span>
+                <span>Review Management</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-600 mb-4">عرض وحذف تقييمات العملاء على المنتجات.</p>
+              <p className="text-gray-600 mb-4">View and delete customer reviews on products.</p>
               <Link href="/admin/reviews">
-                <Button variant="outline" className="w-full">عرض التقييمات</Button>
+                <Button variant="outline" className="w-full">View Reviews</Button>
               </Link>
             </CardContent>
           </Card>
@@ -270,13 +270,13 @@ export default function AdminDashboard() {
             <CardHeader>
               <CardTitle className="flex items-center gap-3">
                 <Code className="w-6 h-6 text-indigo-500" />
-                <span>عرض الأكواد</span>
+                <span>View Code</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-600 mb-4">عرض أكواد جميع الصفحات والمكونات والكيانات.</p>
+              <p className="text-gray-600 mb-4">View code for all pages, components, and entities.</p>
               <Link href="/admin/code-viewer">
-                <Button variant="outline" className="w-full">عرض الأكواد</Button>
+                <Button variant="outline" className="w-full">View Code</Button>
               </Link>
             </CardContent>
           </Card>

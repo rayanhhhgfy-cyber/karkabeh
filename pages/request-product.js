@@ -213,8 +213,7 @@ export default function RequestProduct({ initialLanguage }) {
                   {t.imageUrl}
                 </label>
                 <input
-                  type="file
-                  "
+                  type="url"
                   id="image_url"
                   name="image_url"
                   value={formData.image_url}
@@ -242,7 +241,7 @@ export default function RequestProduct({ initialLanguage }) {
 export async function getServerSideProps() {
   return {
     props: {
-      initialLanguage: 'ar'
+      initialLanguage: 'en'
     }
   };
 }

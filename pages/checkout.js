@@ -5,7 +5,6 @@ import { useCart } from '../context/CartContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useToast } from '../hooks/useToast';
 import Head from 'next/head';
-import MapPicker from '../components/MapPicker';
 
 export default function Checkout() {
   const router = useRouter();
@@ -14,7 +13,6 @@ export default function Checkout() {
   const { showToast, ToastContainer } = useToast();
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(null);
-  const [showMap, setShowMap] = useState(false);
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -24,8 +22,6 @@ export default function Checkout() {
     buildingName: '',
     buildingNumber: '',
     city: '',
-    latitude: null,
-    longitude: null,
     notes: ''
   });
 
@@ -89,14 +85,6 @@ export default function Checkout() {
     }));
   }
 
-  function handleLocationSelect(location) {
-    setFormData(prev => ({
-      ...prev,
-      latitude: location.lat,
-      longitude: location.lng
-    }));
-  }
-
   async function handleSubmit(e) {
     e.preventDefault();
     
@@ -104,11 +92,6 @@ export default function Checkout() {
     if (!formData.fullName || !formData.phone || !formData.address || 
         !formData.buildingName || !formData.buildingNumber || !formData.city) {
       showToast(language === 'ar' ? 'يرجى ملء جميع الحقول المطلوبة' : 'Please fill in all required fields', 'error');
-      return;
-    }
-
-    if (!formData.latitude || !formData.longitude) {
-      showToast(language === 'ar' ? 'يرجى تحديد موقع التوصيل على الخريطة' : 'Please select delivery location on map', 'error');
       return;
     }
 
@@ -132,8 +115,6 @@ export default function Checkout() {
             building_name: formData.buildingName,
             building_number: formData.buildingNumber,
             city: formData.city,
-            latitude: formData.latitude,
-            longitude: formData.longitude,
             notes: formData.notes || null,
             total_amount: totalAmount,
             status: 'pending'
@@ -328,21 +309,6 @@ export default function Checkout() {
                     />
                   </div>
 
-                  {/* Map Location Selector */}
-                  <div>
-                    <button
-                      type="button"
-                      onClick={() => setShowMap(true)}
-                      className="w-full px-4 py-3 border-2 border-blue-500 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors flex items-center justify-center gap-2 font-medium"
-                    >
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                      </svg>
-                      {formData.latitude ? (language === 'ar' ? 'تم تحديد الموقع ✓' : 'Location Selected ✓') : t('selectLocation')}
-                    </button>
-                  </div>
-
                   {/* Notes */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -413,48 +379,7 @@ export default function Checkout() {
         </div>
       </div>
 
-      {/* Map Modal */}
-      {showMap && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-2xl font-bold text-gray-800">
-                  {language === 'ar' ? 'حدد موقع التوصيل' : 'Select Delivery Location'}
-                </h2>
-                <button
-                  onClick={() => setShowMap(false)}
-                  className="text-gray-500 hover:text-gray-700 text-2xl font-bold"
-                >
-                  ×
-                </button>
-              </div>
-              
-              <MapPicker
-                onLocationSelect={handleLocationSelect}
-                initialLocation={formData.latitude ? { lat: formData.latitude, lng: formData.longitude } : null}
-              />
-              
-              <div className="mt-6 flex justify-end gap-3">
-                <button
-                  type="button"
-                  onClick={() => setShowMap(false)}
-                  className="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-                >
-                  {language === 'ar' ? 'إلغاء' : 'Cancel'}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setShowMap(false)}
-                  className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                >
-                  {language === 'ar' ? 'تأكيد الموقع' : 'Confirm Location'}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+
     </>
   );
 }

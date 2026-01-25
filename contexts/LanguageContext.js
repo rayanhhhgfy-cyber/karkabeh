@@ -77,6 +77,7 @@ export const translations = {
     alreadyHaveAccount: 'Already have an account?',
     continueAsGuest: 'Continue as guest',
     orContinueWith: 'Or continue with',
+    continueWithGoogle: 'Continue with Google',
     rememberMe: 'Remember Me',
     
     // Common
@@ -192,6 +193,7 @@ export const translations = {
     alreadyHaveAccount: 'لديك حساب بالفعل؟',
     continueAsGuest: 'متابعة كزائر',
     orContinueWith: 'أو تابع باستخدام',
+    continueWithGoogle: 'متابعة باستخدام جوجل',
     rememberMe: 'تذكرني',
     
     // Common

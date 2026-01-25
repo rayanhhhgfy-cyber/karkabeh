@@ -1,6 +1,7 @@
 import { useCart } from '../context/CartContext';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import Navigation from '../components/Navigation';
 
 export default function Cart() {
   const router = useRouter();
@@ -8,29 +9,7 @@ export default function Cart() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      <nav className="bg-white shadow-lg sticky top-0 z-50">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <Link href="/" className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-              كركبة
-            </Link>
-            <div className="hidden sm:flex items-center gap-4 lg:gap-6">
-              <Link href="/products" className="text-sm lg:text-base text-gray-600 hover:text-blue-600 transition-colors font-medium">
-                Products
-              </Link>
-              <Link href="/cart" className="text-sm lg:text-base text-blue-600 font-bold">
-                Cart ({getCartCount()})
-              </Link>
-              <Link href="/profile" className="text-sm lg:text-base text-gray-600 hover:text-blue-600 transition-colors font-medium">
-                Profile
-              </Link>
-            </div>
-            <div className="sm:hidden">
-              <span className="text-sm font-semibold text-blue-600">Cart ({getCartCount()})</span>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <Navigation />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
         <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-6 sm:mb-8 text-gray-900">Shopping Cart</h1>
