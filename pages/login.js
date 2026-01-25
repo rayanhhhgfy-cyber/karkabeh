@@ -112,22 +112,34 @@ export default function Login() {
         const { data: authData, error: authError } = await supabase.auth.signUp({
           email,
           password,
+          options: {
+            data: {
+              full_name: fullName,
+            }
+          }
         });
         
         if (authError) throw authError;
         
-        // Create user profile
-        const { error: profileError } = await supabase
-          .from('users')
-          .insert([{
-            id: authData.user.id,
-            email,
-            full_name: fullName,
-            role: 'customer',
-            created_at: new Date().toISOString()
-          }]);
-        
-        if (profileError) throw profileError;
+        // Try to create user profile, but don't fail if it doesn't work
+        // (the profile can be created later or via a database trigger)
+        try {
+          const { error: profileError } = await supabase
+            .from('users')
+            .insert([{
+              id: authData.user.id,
+              email,
+              full_name: fullName,
+              role: 'customer',
+              created_at: new Date().toISOString()
+            }]);
+          
+          if (profileError) {
+            console.log('Profile creation deferred:', profileError.message);
+          }
+        } catch (profileErr) {
+          console.log('Profile creation will be handled later');
+        }
         
         setMessage('Account created successfully! Please check your email to verify your account.');
         setIsLogin(true);

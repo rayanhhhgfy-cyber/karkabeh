@@ -25,6 +25,7 @@ export default function ProductDetail() {
     comment: ''
   });
   const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
+  const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
     if (id) {
@@ -97,8 +98,23 @@ export default function ProductDetail() {
 
   const handleAddToCart = () => {
     if (product && product.stock > 0) {
-      addToCart(product);
-      showToast('Added to cart!', 'success');
+      for (let i = 0; i < quantity; i++) {
+        addToCart(product);
+      }
+      showToast(`Added ${quantity} item${quantity > 1 ? 's' : ''} to cart!`, 'success');
+      setQuantity(1);
+    }
+  };
+
+  const incrementQuantity = () => {
+    if (quantity < product.stock) {
+      setQuantity(quantity + 1);
+    }
+  };
+
+  const decrementQuantity = () => {
+    if (quantity > 1) {
+      setQuantity(quantity - 1);
     }
   };
 
@@ -224,6 +240,31 @@ export default function ProductDetail() {
                   </p>
                 )}
               </div>
+
+              {product.stock > 0 && (
+                <div className="flex items-center gap-4 mb-6">
+                  <span className="text-gray-700 font-medium">{language === 'ar' ? 'الكمية:' : 'Quantity:'}</span>
+                  <div className="flex items-center border border-gray-300 rounded-lg">
+                    <button
+                      type="button"
+                      onClick={decrementQuantity}
+                      className="px-4 py-2 text-gray-600 hover:bg-gray-100 transition-colors rounded-l-lg"
+                      disabled={quantity <= 1}
+                    >
+                      -
+                    </button>
+                    <span className="px-6 py-2 text-lg font-semibold border-x border-gray-300">{quantity}</span>
+                    <button
+                      type="button"
+                      onClick={incrementQuantity}
+                      className="px-4 py-2 text-gray-600 hover:bg-gray-100 transition-colors rounded-r-lg"
+                      disabled={quantity >= product.stock}
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+              )}
 
               <button
                 onClick={handleAddToCart}
