@@ -25,8 +25,11 @@ export default function Profile() {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       
+      // Demo site: no login page anymore, so a visitor without an account
+      // simply sees an empty profile instead of being redirected.
       if (!user) {
-        router.push('/login');
+        setUser(null);
+        setLoading(false);
         return;
       }
 
@@ -35,7 +38,7 @@ export default function Profile() {
       await loadOrders(user.id);
     } catch (error) {
       console.error('Error checking user:', error);
-      router.push('/login');
+      setLoading(false);
     }
   }
 
@@ -88,6 +91,7 @@ export default function Profile() {
 
   async function handleUpdateProfile(e) {
     e.preventDefault();
+    if (!user) return;
     
     try {
       const { error } = await supabase
@@ -111,7 +115,7 @@ export default function Profile() {
 
   async function handleLogout() {
     await supabase.auth.signOut();
-    router.push('/login');
+    router.push('/products');
   }
 
   if (loading) {

@@ -34,8 +34,11 @@ export default function AdminProducts() {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       
+      // Demo site: no login page anymore; admin pages render without an account.
       if (!user) {
-        router.push('/login');
+        setUser(null);
+        await loadProducts();
+        await loadCategories();
         return;
       }
 
@@ -59,7 +62,7 @@ export default function AdminProducts() {
       await loadCategories();
     } catch (error) {
       console.error('Error checking user:', error);
-      router.push('/login');
+      setLoading(false);
     }
   }
 
@@ -222,7 +225,7 @@ export default function AdminProducts() {
 
   async function handleLogout() {
     await supabase.auth.signOut();
-    router.push('/login');
+    router.push('/products');
   }
 
   if (loading) {

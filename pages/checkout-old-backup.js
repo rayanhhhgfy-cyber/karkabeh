@@ -33,8 +33,9 @@ export default function Checkout() {
 
   async function checkUser() {
     const { data: { user } } = await supabase.auth.getUser();
+    // Demo site: no login page anymore; checkout works without an account.
     if (!user) {
-      router.push('/login');
+      setUser(null);
       return;
     }
     setUser(user);

@@ -21,8 +21,10 @@ export default function AdminOrders() {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       
+      // Demo site: no login page anymore; admin pages render without an account.
       if (!user) {
-        router.push('/login');
+        setUser(null);
+        await loadOrders();
         return;
       }
 
@@ -44,7 +46,7 @@ export default function AdminOrders() {
       await loadOrders();
     } catch (error) {
       console.error('Error checking user:', error);
-      router.push('/login');
+      setLoading(false);
     }
   }
 
@@ -82,7 +84,7 @@ export default function AdminOrders() {
 
   async function handleLogout() {
     await supabase.auth.signOut();
-    router.push('/login');
+    router.push('/products');
   }
 
   if (loading) {

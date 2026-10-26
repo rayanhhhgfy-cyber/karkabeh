@@ -18,8 +18,10 @@ export default function AdminReviews() {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       
+      // Demo site: no login page anymore; admin pages render without an account.
       if (!user) {
-        router.push('/login');
+        setUser(null);
+        await loadReviews();
         return;
       }
 
@@ -43,7 +45,7 @@ export default function AdminReviews() {
       await loadReviews();
     } catch (error) {
       console.error('Error checking user:', error);
-      router.push('/login');
+      setLoading(false);
     }
   }
 
@@ -92,7 +94,7 @@ export default function AdminReviews() {
 
   async function handleLogout() {
     await supabase.auth.signOut();
-    router.push('/login');
+    router.push('/products');
   }
 
   const renderStars = (rating) => {

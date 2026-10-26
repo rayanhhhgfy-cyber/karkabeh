@@ -53,13 +53,25 @@ export default function Layout({ children, user }) {
     { name: "watches", label: "ساعات", icon: "⌚" },
   ];
 
-  // Don't show layout on login page
-  if (router.pathname === '/' || router.pathname === '/login') {
-    return <>{children}</>;
+  // No login page anymore: the demo banner shows on every page, including '/'
+  if (router.pathname === '/') {
+    return (
+      <>
+        {/* Demo banner: this site is a showcase only */}
+        <div className="w-full bg-amber-400 px-4 py-3 text-center text-sm font-bold text-black sm:text-base">
+          Demo &mdash; this website was made entirely for show &middot; عرض تجريبي &mdash; هذا الموقع مخصص للعرض فقط
+        </div>
+        {children}
+      </>
+    );
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-gray-50">
+  {/* Demo banner: this site is a showcase only */}
+  <div className="w-full bg-amber-400 px-4 py-3 text-center text-sm font-bold text-black sm:text-base">
+    Demo &mdash; this website was made entirely for show &middot; عرض تجريبي &mdash; هذا الموقع مخصص للعرض فقط
+  </div>
       {/* Header */}
       <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/95 backdrop-blur-lg">
         <div className="container mx-auto px-4">
@@ -137,13 +149,7 @@ export default function Layout({ children, user }) {
                     </button>
                   </div>
                 </div>
-              ) : (
-                <Link href="/login">
-                  <button className="px-4 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors">
-                    تسجيل الدخول
-                  </button>
-                </Link>
-              )}
+              ) : null}
 
               {/* Mobile Menu Button */}
               <button

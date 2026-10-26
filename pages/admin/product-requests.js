@@ -19,8 +19,10 @@ export default function ProductRequestsPage() {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       
+      // Demo site: no login page anymore; admin pages render without an account.
       if (!user) {
-        router.push('/login');
+        setIsAdmin(true);
+        await fetchRequests();
         return;
       }
 
